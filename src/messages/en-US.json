@@ -5,7 +5,18 @@
   "item": "item",
   "addToBasket": "Add to cart",
   "checkout": "Checkout",
-  "totalItems": "Total items"
+  "totalItems": "Total items",
+  "qty": "Qty",
+  "price": "Price",
+  "subtotal": "Subtotal",
+  "remove": "Remove",
+  "empty": "Empty",
+  "loadingBasket": "Loading cart…",
+  "summary": "Summary",
+  "grandTotal": "Grand total",
+  "grandTotals": "Grand totals",
+  "increase": "Increase",
+  "decrease": "Decrease"
 }
 
 
