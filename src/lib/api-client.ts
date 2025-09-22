@@ -1,7 +1,6 @@
 type Locale = 'uk' | 'us';
 
 interface ApiConfig {
-  baseUrl: string;
   timeout: number;
 }
 
@@ -12,19 +11,61 @@ class ApiClient {
     this.config = config;
   }
 
+  private async resolveUrl(endpoint: string): Promise<string> {
+    // Client-side: use relative URLs
+    if (typeof window !== 'undefined') {
+      return endpoint;
+    }
+
+    // Server-side: build absolute URL with proper headers
+    try {
+      const { headers } = await import('next/headers');
+      const h = headers();
+      const host = h.get('host') || process.env.VERCEL_URL || 'localhost:3000';
+      const proto = h.get('x-forwarded-proto') || (process.env.VERCEL_URL ? 'https' : 'http');
+      return `${proto}://${host}${endpoint}`;
+    } catch {
+      const host = process.env.VERCEL_URL || 'localhost:3000';
+      const proto = process.env.VERCEL_URL ? 'https' : 'http';
+      return `${proto}://${host}${endpoint}`;
+    }
+  }
+
+  private async buildHeaders(options: RequestInit): Promise<HeadersInit> {
+    const baseHeaders: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      ...(options.headers as Record<string, string> | undefined),
+    };
+
+    // Forward authentication cookies on server-side
+    if (typeof window === 'undefined') {
+      try {
+        const { headers } = await import('next/headers');
+        const cookie = headers().get('cookie');
+        if (cookie) baseHeaders.cookie = cookie;
+      } catch {
+        // Ignore header access errors
+      }
+    }
+
+    return baseHeaders;
+  }
+
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
 
     try {
-      const response = await fetch(`${this.config.baseUrl}${endpoint}`, {
+      const [url, headers] = await Promise.all([
+        this.resolveUrl(endpoint),
+        this.buildHeaders(options)
+      ]);
+
+      const response = await fetch(url, {
         ...options,
         signal: controller.signal,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          ...options.headers,
-        },
+        headers,
       });
 
       if (!response.ok) {
@@ -63,11 +104,7 @@ export interface Product {
 
 // Factory function for environment-aware client
 export function createApiClient(): ApiClient {
-  // Use relative URLs in all environments to avoid external domain protection (e.g., Vercel preview auth)
-  const baseUrl = '';
-
   return new ApiClient({
-    baseUrl,
     timeout: 10000,
   });
 }
