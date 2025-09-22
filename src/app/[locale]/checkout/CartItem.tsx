@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback } from 'react';
-import styles from '../../page.module.css';
 import { formatCurrency } from '@/lib/currency';
 import { useCartStore } from '@/store/cart';
 import { useTranslations } from 'next-intl';
@@ -32,44 +31,47 @@ export default function CartItem({ name, price, currency, quantity, locale }: Ca
   const subtotal = price * quantity;
 
   return (
-    <div className={`${styles.card} ${styles.itemCard}`}>
-      <h2>{name}</h2>
+    <div className="summary-box flex flex-col gap-2">
+      <h2 className="text-base font-semibold">{name}</h2>
       
-      <div className={styles.controls}>
+      <div className="mt-[var(--space-2)] flex items-center gap-[var(--space-2)]">
         <button 
           onClick={() => decrementItem(name)} 
           aria-label={`${t('decrease')} ${name}`}
+          className="btn-icon"
         >
           -
         </button>
-        <label className={styles.controls}>
-          <span>{t('qty')}</span>
+        <label className="flex items-center gap-[var(--space-2)] text-sm">
+          <span className="sr-only">{t('qty')}</span>
           <input
             type="number"
             inputMode="numeric"
             min={0}
             value={quantity}
             onChange={(e) => handleQuantityChange(e.target.value)}
-            className={styles.qtyInput}
+            className="input w-16"
           />
         </label>
         <button 
           onClick={handleIncrement} 
           aria-label={`${t('increase')} ${name}`}
+          className="btn-icon"
         >
           +
         </button>
       </div>
 
-      <div className={styles.priceRow}>
+      <div className="mt-[var(--space-2)] flex gap-[var(--space-4)] text-[0.9rem] opacity-80">
         <span>{t('price')}: {formatCurrency(price, currency, locale)}</span>
         <span><strong>{t('subtotal')}: {formatCurrency(subtotal, currency, locale)}</strong></span>
       </div>
 
-      <div>
+      <div className="mt-[var(--space-2)]">
         <button 
           onClick={() => removeItem(name)} 
           aria-label={`${t('remove')} ${name}`}
+          className="btn-danger"
         >
           {t('remove')}
         </button>
