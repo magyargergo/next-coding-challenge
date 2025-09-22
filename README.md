@@ -1,5 +1,13 @@
 # Michael’s Next.js Coding Challenge
 
+<p align="right">
+  <a href="https://next-coding-challenge-mu.vercel.app">next-coding-challenge-mu.vercel.app</a>
+  <br />
+  <a href="https://github.com/magyargergo/next-coding-challenge/deployments/activity_log?environment=Production">
+    <img src="https://img.shields.io/github/deployments/magyargergo/next-coding-challenge/Production?label=vercel%20production" alt="Latest Production Deployment" />
+  </a>
+</p>
+
 A production-grade e‑commerce storefront built with the App Router. The brief came with TODOs, flaky tests, and awkward state. I cleaned it up with a small, testable core, strong typing, and a simple i18n model that can scale.
 
 ---
