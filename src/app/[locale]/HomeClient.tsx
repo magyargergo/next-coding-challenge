@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useState, useCallback } from 'react';
-import styles from '../page.module.css';
 import { Product, api } from '@/lib/api-client';
 import { useCartStore } from '@/store/cart';
 import { useTranslations } from 'next-intl';
@@ -47,33 +46,33 @@ export default function HomeClient({ initialProducts, currency, locale }: HomeCl
   }, [t, basketItemCount]);
 
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>{t('title')}</p>
-        <div>
-          <Link href={`/${locale}/checkout`} aria-label={t('basket')}>
-            <button className={styles.basket} suppressHydrationWarning>{basketLabel}</button>
-          </Link>
-        </div>
-      </div>
+    <main className="page-layout">
+      <header className="page-header">
+        <p className="callout">{t('title')}</p>
+        <Link href={`/${locale}/checkout`} aria-label={t('basket')}>
+          <button className="btn" suppressHydrationWarning>
+            {basketLabel}
+          </button>
+        </Link>
+      </header>
 
-      <div className={styles.grid}>
+      <div className="product-grid">
         {products.map((product) => (
           <button 
             key={product.id} 
-            className={styles.card} 
+            className="card group" 
             onClick={() => handleAddToCart(product)} 
             aria-label={t('addToBasket')}
           >
-            <h2>{product.name} <span>-&gt;</span></h2>
-            <p>{product.description ?? ''}</p>
+            <h2 className="mb-[0.7rem] font-semibold">{product.name} <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">-&gt;</span></h2>
+            <p className="max-w-[30ch] text-[0.9rem] leading-6 opacity-60">{product.description ?? ''}</p>
             {typeof product.price === 'number' && (
-              <p><strong>{formatCurrency(product.price, currency, locale)}</strong></p>
+              <p className="mt-2"><strong>{formatCurrency(product.price, currency, locale)}</strong></p>
             )}
           </button>
         ))}
       </div>
-      <div>
+      <div className="mt-[var(--space-8)] space-y-[var(--space-1)] text-sm opacity-80">
         {products.slice(0, 4).map(product => (
           <div key={`qty-${product.id}`} suppressHydrationWarning>
             {product.name} count: {hasHydrated ? getQuantityFor(product.name) : 0}
