@@ -63,11 +63,8 @@ export interface Product {
 
 // Factory function for environment-aware client
 export function createApiClient(): ApiClient {
-  const baseUrl = typeof window !== 'undefined' 
-    ? '' // Client-side: relative URLs
-    : process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}`
-      : 'http://localhost:3000'; // Server-side: absolute URLs
+  // Use relative URLs in all environments to avoid external domain protection (e.g., Vercel preview auth)
+  const baseUrl = '';
 
   return new ApiClient({
     baseUrl,
