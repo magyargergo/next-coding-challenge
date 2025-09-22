@@ -2,7 +2,6 @@
 
 import { useCartStore } from '@/store/cart';
 import Link from 'next/link';
-import styles from '../../page.module.css';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { formatCurrency } from '@/lib/currency';
@@ -52,31 +51,29 @@ export default function CheckoutPage() {
   };
 
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>{t('checkout')}</p>
-        <div>
-          <Link href={`/${locale}`} className={styles.card}>
-            &larr; {t('title')}
-          </Link>
-        </div>
-      </div>
+    <main className="page-layout">
+      <header className="page-header">
+        <p className="callout">{t('checkout')}</p>
+        <Link href={`/${locale}`} className="btn">
+          &larr; {t('title')}
+        </Link>
+      </header>
 
-      <div className={styles.checkoutContent}>
-        <div className={styles.checkoutItems}>
+      <div className="checkout-layout"> 
+        <div className="grid gap-[var(--space-4)]">
           {renderContent()}
         </div>
         
-        <aside className={`${styles.card} ${styles.checkoutSummary}`}>
-          <h3>{t('summary')}</h3>
-          <div className={styles.summaryRow}>
+        <aside className="summary-box md:sticky md:top-4"> 
+          <h3 className="mb-3 text-lg font-semibold">{t('summary')}</h3>
+          <div className="my-1 flex justify-between text-sm">
             <span>{t('totalItems')}</span>
             <span suppressHydrationWarning>{hasHydrated ? totalQuantity : 0}</span>
           </div>
           {hasHydrated && (
-            <div className={styles.summaryTotal}>
+            <div className="mt-2 flex items-center justify-between text-base font-bold">
               <span>{t('grandTotal')}</span>
-              <div>
+              <div className="font-semibold">
                 {formatCurrency(grandTotal, locale === 'en-US' ? 'USD' : 'GBP', locale)}
               </div>
             </div>
