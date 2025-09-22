@@ -1,0 +1,11 @@
+{
+  "title": "Michael's Awesome Web Store",
+  "basket": "Cart",
+  "items": "items",
+  "item": "item",
+  "addToBasket": "Add to cart",
+  "checkout": "Checkout",
+  "totalItems": "Total items"
+}
+
+
