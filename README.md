@@ -1,12 +1,14 @@
 # Michael’s Next.js Coding Challenge
 
-<p align="right">
-  <a href="https://next-coding-challenge-mu.vercel.app">next-coding-challenge-mu.vercel.app</a>
-  <br />
-  <a href="https://github.com/magyargergo/next-coding-challenge/deployments/activity_log?environment=Production">
-    <img src="https://img.shields.io/github/deployments/magyargergo/next-coding-challenge/Production?label=vercel%20production" alt="Latest Production Deployment" />
+<div align="right">
+  <a href="https://next-coding-challenge-mu.vercel.app" target="_blank">
+    <img src="https://img.shields.io/website?url=https%3A%2F%2Fnext-coding-challenge-mu.vercel.app&label=%F0%9F%8C%90%20Live%20Site&up_message=online&down_message=offline&up_color=00C896&down_color=FF6B6B&style=flat-square&labelColor=2D3748" alt="Live Site" />
   </a>
-</p>
+  &nbsp;
+  <a href="https://github.com/magyargergo/next-coding-challenge/deployments/activity_log?environment=Production" target="_blank">
+    <img src="https://img.shields.io/github/deployments/magyargergo/next-coding-challenge/Production?label=%E2%96%B2%20Deploy&logo=vercel&logoColor=white&style=flat-square&color=000000&labelColor=2D3748" alt="Vercel Deployment" />
+  </a>
+</div>
 
 A production-grade e‑commerce storefront built with the App Router. The brief came with TODOs, flaky tests, and awkward state. I cleaned it up with a small, testable core, strong typing, and a simple i18n model that can scale.
 
