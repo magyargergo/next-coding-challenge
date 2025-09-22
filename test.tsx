@@ -1,4 +1,5 @@
 import { render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import HomeClient from '@/app/[locale]/HomeClient';
 import React from 'react';
 
@@ -17,10 +18,10 @@ jest.mock('next-intl', () => ({
 const wrapper = (ui: React.ReactElement) => ui;
 
 const initialProducts = [
-    { id: 1, name: 'Item 1', price: 1 },
-    { id: 2, name: 'Item 2', price: 2 },
-    { id: 3, name: 'Item 3', price: 3 },
-    { id: 4, name: 'Item 4', price: 4 }
+    { id: 1, name: 'Item 1', price: 1, currency: 'GBP' },
+    { id: 2, name: 'Item 2', price: 2, currency: 'GBP' },
+    { id: 3, name: 'Item 3', price: 3, currency: 'GBP' },
+    { id: 4, name: 'Item 4', price: 4, currency: 'GBP' }
 ];
 
 describe('HomeClient', () => {
@@ -36,12 +37,13 @@ describe('HomeClient', () => {
 
     it('renders a basket with 1 item', async () => {
         render(wrapper(<HomeClient initialProducts={initialProducts} currency="GBP" locale="en-GB" />));
+        const user = userEvent.setup();
 
         const buttons = screen.getAllByRole('button', {
             name: /Add to basket/i,
         });
 
-        await buttons[0].click();
+        await user.click(buttons[0]);
 
         const basketButton = screen.getByRole('button', {
             name: /Basket:/i,
@@ -52,14 +54,15 @@ describe('HomeClient', () => {
 
     it('renders a basket with 1 of item 1 and 2 of item 2', async () => {
         render(wrapper(<HomeClient initialProducts={initialProducts} currency="GBP" locale="en-GB" />));
+        const user = userEvent.setup();
 
         const buttons = screen.getAllByRole('button', {
             name: /Add to basket/i,
         });
 
-        await buttons[0].click();
-        await buttons[1].click();
-        await buttons[1].click();
+        await user.click(buttons[0]);
+        await user.click(buttons[1]);
+        await user.click(buttons[1]);
 
         const basketButton = screen.getByRole('button', {
             name: /Basket:/i,
