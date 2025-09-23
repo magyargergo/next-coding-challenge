@@ -37,6 +37,7 @@ A production-grade e‑commerce storefront built with the App Router. The brief 
 - **`next-intl` messages** with a `[locale]` segment and middleware redirect.
 - **TypeScript everywhere** with small, predictable types.
  - **Tailwind CSS v4** via `@tailwindcss/postcss`, with design tokens in `@theme` and semantic classes (e.g. `btn`, `card`).
+ - **A11y-first**: focus-visible rings; loading overlay uses `aria-live` without layout shift.
 
 ---
 
@@ -189,6 +190,13 @@ Run tests and lint:
 npm run test
 npm run lint
 ```
+
+### Tuning staged loading
+
+- Adjust delay constants in `src/app/[locale]/HomeClient.tsx`:
+  - `SKELETON_DELAY_MS` (show skeletons after a short delay to avoid flashing)
+  - `OVERLAY_MIN_MS` (keep overlay visible a bit longer for smoothness)
+- Update styles in `src/app/globals.css` (`.spinner-ring`, `.skeleton`, `.loading-overlay`).
 
 ---
 
