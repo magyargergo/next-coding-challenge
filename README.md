@@ -23,6 +23,8 @@ A production-grade e‑commerce storefront built with the App Router. The brief 
 - **Progressive fetching:** “more products” loads after render via the same proxy.
 - **Checkout basics:** line items and total quantity.
 - **CI/CD ready:** tests on every push; deploy on `main`.
+ - **Unified design system:** Tailwind v4 with semantic tokens and small component classes (minimal custom CSS).
+ - **Polished loading UX:** staged loading for more products (overlay → skeletons → content) with no layout shift.
 
 ---
 
@@ -34,6 +36,7 @@ A production-grade e‑commerce storefront built with the App Router. The brief 
 - **Zustand cart:** persisted store with derived selectors (total quantity, unique items).
 - **`next-intl` messages** with a `[locale]` segment and middleware redirect.
 - **TypeScript everywhere** with small, predictable types.
+ - **Tailwind CSS v4** via `@tailwindcss/postcss`, with design tokens in `@theme` and semantic classes (e.g. `btn`, `card`).
 
 ---
 
