@@ -140,6 +140,7 @@
     max-width: var(--max-width);
     margin-top: var(--space-8);
     gap: var(--space-4);
+    position: relative;
   }
 
   .checkout-layout {
@@ -194,6 +195,17 @@
     animation: spin 0.8s linear infinite;
   }
 
+  /* Nicer, subtle ring spinner */
+  .spinner-ring {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 9999px;
+    background: conic-gradient(#60a5fa 0deg, #60a5fa 90deg, transparent 90deg);
+    -webkit-mask: radial-gradient(farthest-side, #000 70%, transparent 71%);
+            mask: radial-gradient(farthest-side, #000 70%, transparent 71%);
+    animation: spin 0.8s linear infinite;
+  }
+
   .skeleton {
     border-radius: var(--radius);
     border: var(--border-subtle);
@@ -203,7 +215,7 @@
       rgb(var(--color-card) / 0.06) 100%
     );
     background-size: 200% 100%;
-    animation: shimmer 1.4s ease-in-out infinite;
+    animation: shimmer 1.4s ease-in-out infinite, fade-in 0.25s ease both;
     min-height: 9.5rem; /* Match card min-height */
     padding: var(--space-4) var(--space-5); /* Match card padding to align lines */
   }
@@ -220,5 +232,18 @@
     align-items: center;
     justify-content: center;
     animation: fade-in 0.3s ease-in;
+  }
+
+  .loading-overlay {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: var(--space-4);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    animation: fade-in 0.2s ease-in;
+    pointer-events: none;
   }
 }

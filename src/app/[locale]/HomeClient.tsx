@@ -19,6 +19,12 @@ export default function HomeClient({ initialProducts, currency, locale }: HomeCl
   const { addItem, getQuantityFor, getTotalUniqueItems } = useCartStore();
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [showSkeletons, setShowSkeletons] = useState(false);
+  const [overlayVisible, setOverlayVisible] = useState(false);
+  
+  // Tunables
+  const SKELETON_DELAY_MS = 450; // avoid flash
+  const OVERLAY_MIN_MS = 1000; // keep overlay a little longer
   const hasHydrated = useCartHydration();
 
   useEffect(() => {
@@ -37,6 +43,24 @@ export default function HomeClient({ initialProducts, currency, locale }: HomeCl
     
     return () => { mounted = false; };
   }, [currency]);
+
+  // Stage loading UI: show overlay immediately, skeletons after short delay
+  useEffect(() => {
+    let skeletonTimer: ReturnType<typeof setTimeout> | undefined;
+    let overlayTimer: ReturnType<typeof setTimeout> | undefined;
+    if (isLoadingMore) {
+      setOverlayVisible(true);
+      skeletonTimer = setTimeout(() => setShowSkeletons(true), SKELETON_DELAY_MS);
+      overlayTimer = setTimeout(() => setOverlayVisible(false), OVERLAY_MIN_MS);
+    } else {
+      setShowSkeletons(false);
+      setOverlayVisible(false);
+    }
+    return () => {
+      if (skeletonTimer) clearTimeout(skeletonTimer);
+      if (overlayTimer) clearTimeout(overlayTimer);
+    };
+  }, [isLoadingMore]);
 
   const handleAddToCart = useCallback((product: Product) => {
     addItem(product.name, product.price, currency);
@@ -63,7 +87,7 @@ export default function HomeClient({ initialProducts, currency, locale }: HomeCl
         {products.map((product) => (
           <button 
             key={product.id} 
-            className="card card-fixed group" 
+            className="card group" 
             onClick={() => handleAddToCart(product)} 
             aria-label={t('addToBasket')}
           >
@@ -74,24 +98,25 @@ export default function HomeClient({ initialProducts, currency, locale }: HomeCl
             )}
           </button>
         ))}
-        {isLoadingMore && (
+        {overlayVisible && (
+          <div className="loading-overlay" role="status" aria-live="polite" aria-busy="true">
+            <div className="spinner-ring" aria-hidden="true"></div>
+            <span>Loading more…</span>
+          </div>
+        )}
+        {showSkeletons && (
           <>
-            <div className="card card-fixed skeleton" aria-hidden="true">
+            <div className="skeleton" aria-hidden="true">
               <div className="skeleton-line w-2/3 mb-[var(--space-3)]"></div>
               <div className="skeleton-line w-full mb-[var(--space-2)]"></div>
               <div className="skeleton-line w-3/4"></div>
             </div>
-            <div className="card card-fixed skeleton" aria-hidden="true">
+            <div className="skeleton" aria-hidden="true">
               <div className="skeleton-line w-2/3 mb-[var(--space-3)]"></div>
               <div className="skeleton-line w-full mb-[var(--space-2)]"></div>
               <div className="skeleton-line w-3/4"></div>
             </div>
-            <div className="card card-fixed skeleton" aria-hidden="true">
-              <div className="skeleton-line w-2/3 mb-[var(--space-3)]"></div>
-              <div className="skeleton-line w-full mb-[var(--space-2)]"></div>
-              <div className="skeleton-line w-3/4"></div>
-            </div>
-            <div className="card card-fixed skeleton" aria-hidden="true">
+            <div className="skeleton" aria-hidden="true">
               <div className="skeleton-line w-2/3 mb-[var(--space-3)]"></div>
               <div className="skeleton-line w-full mb-[var(--space-2)]"></div>
               <div className="skeleton-line w-3/4"></div>
@@ -99,12 +124,7 @@ export default function HomeClient({ initialProducts, currency, locale }: HomeCl
           </>
         )}
       </div>
-      {(
-        <div className="mt-[var(--space-4)] loading-row text-sm opacity-80" role="status" aria-live="polite" aria-busy={isLoadingMore}>
-          <div className="spinner" aria-hidden="true"></div>
-          <span>{isLoadingMore ? 'Loading more…' : ''}</span>
-        </div>
-      )}
+      
       <div className="mt-[var(--space-8)] space-y-[var(--space-1)] text-sm opacity-80">
         {products.slice(0, 4).map(product => (
           <div key={`qty-${product.id}`} suppressHydrationWarning>
