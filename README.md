@@ -202,9 +202,10 @@ npm run lint
 
 ## CI/CD
 
-- **`.github/workflows/ci.yml`** – runs tests on every push/PR.
-- **`.github/workflows/deploy.yml`** – deploys to Vercel on push to `main`.
-  - Requires `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
+- **`.github/workflows/ci.yml`** – lint, test, and build on every push/PR (Node 20). Uses concurrency to cancel duplicate in-flight runs per ref.
+- **`.github/workflows/deploy.yml`** – deploys to Production after a successful CI on `main` (Vercel prebuild + deploy). Publishes the Production URL to the environment.
+- **`.github/workflows/preview.yml`** – deploys Preview after a successful CI on non‑`main` branches.
+  - Requires `VERCEL_TOKEN`.
 
 ---
 
