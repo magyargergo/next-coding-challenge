@@ -172,3 +172,53 @@
     padding: var(--space-4);
   }
 }
+
+/* Lightweight loading visuals */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@layer components {
+  .spinner {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 9999px;
+    border: 2px solid rgb(var(--color-card-border) / 0.35);
+    border-top-color: transparent;
+    border-left-color: transparent;
+    animation: spin 0.8s linear infinite;
+  }
+
+  .skeleton {
+    border-radius: var(--radius);
+    border: var(--border-subtle);
+    background: linear-gradient(90deg,
+      rgb(var(--color-card) / 0.06) 0%,
+      rgb(var(--color-card) / 0.12) 50%,
+      rgb(var(--color-card) / 0.06) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+    min-height: 9.5rem; /* Match card min-height */
+    padding: var(--space-4) var(--space-5); /* Match card padding to align lines */
+  }
+
+  .skeleton-line {
+    height: 0.875rem;
+    border-radius: var(--radius-sm);
+    background: rgb(var(--color-card) / 0.15); /* Subtle line color */
+  }
+
+  .loading-container {
+    min-height: 1.75rem; /* Reserves space for indicator */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fade-in 0.3s ease-in;
+  }
+}

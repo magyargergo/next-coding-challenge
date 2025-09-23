@@ -18,19 +18,22 @@ export default function HomeClient({ initialProducts, currency, locale }: HomeCl
   const t = useTranslations();
   const { addItem, getQuantityFor, getTotalUniqueItems } = useCartStore();
   const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const hasHydrated = useCartHydration();
 
   useEffect(() => {
     let mounted = true;
     const apiLocale = currency === 'USD' ? 'us' : 'uk';
     
+    setIsLoadingMore(true);
     api.getMoreProducts(apiLocale)
       .then(moreProducts => {
         if (mounted && moreProducts.length > 0) {
           setProducts(prevProducts => [...prevProducts, ...moreProducts]);
         }
       })
-      .catch(() => {}); // Silently fail for additional products
+      .catch(() => {}) // Silently fail for additional products
+      .finally(() => { if (mounted) setIsLoadingMore(false); });
     
     return () => { mounted = false; };
   }, [currency]);
@@ -60,7 +63,7 @@ export default function HomeClient({ initialProducts, currency, locale }: HomeCl
         {products.map((product) => (
           <button 
             key={product.id} 
-            className="card group" 
+            className="card card-fixed group" 
             onClick={() => handleAddToCart(product)} 
             aria-label={t('addToBasket')}
           >
@@ -71,7 +74,37 @@ export default function HomeClient({ initialProducts, currency, locale }: HomeCl
             )}
           </button>
         ))}
+        {isLoadingMore && (
+          <>
+            <div className="card card-fixed skeleton" aria-hidden="true">
+              <div className="skeleton-line w-2/3 mb-[var(--space-3)]"></div>
+              <div className="skeleton-line w-full mb-[var(--space-2)]"></div>
+              <div className="skeleton-line w-3/4"></div>
+            </div>
+            <div className="card card-fixed skeleton" aria-hidden="true">
+              <div className="skeleton-line w-2/3 mb-[var(--space-3)]"></div>
+              <div className="skeleton-line w-full mb-[var(--space-2)]"></div>
+              <div className="skeleton-line w-3/4"></div>
+            </div>
+            <div className="card card-fixed skeleton" aria-hidden="true">
+              <div className="skeleton-line w-2/3 mb-[var(--space-3)]"></div>
+              <div className="skeleton-line w-full mb-[var(--space-2)]"></div>
+              <div className="skeleton-line w-3/4"></div>
+            </div>
+            <div className="card card-fixed skeleton" aria-hidden="true">
+              <div className="skeleton-line w-2/3 mb-[var(--space-3)]"></div>
+              <div className="skeleton-line w-full mb-[var(--space-2)]"></div>
+              <div className="skeleton-line w-3/4"></div>
+            </div>
+          </>
+        )}
       </div>
+      {(
+        <div className="mt-[var(--space-4)] loading-row text-sm opacity-80" role="status" aria-live="polite" aria-busy={isLoadingMore}>
+          <div className="spinner" aria-hidden="true"></div>
+          <span>{isLoadingMore ? 'Loading more…' : ''}</span>
+        </div>
+      )}
       <div className="mt-[var(--space-8)] space-y-[var(--space-1)] text-sm opacity-80">
         {products.slice(0, 4).map(product => (
           <div key={`qty-${product.id}`} suppressHydrationWarning>
